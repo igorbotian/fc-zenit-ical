@@ -16,6 +16,7 @@
 
     <modules>
         <module>cli</module>
+        <module>core</module>
     </modules>
 
     <dependencyManagement>
