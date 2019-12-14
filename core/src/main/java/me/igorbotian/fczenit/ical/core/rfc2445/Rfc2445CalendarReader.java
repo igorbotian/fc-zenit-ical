@@ -23,7 +23,7 @@ public class Rfc2445CalendarReader implements AutoCloseable {
         this.reader = new BufferedReader(reader);
     }
 
-    public Rfc2445Param readNextParam() throws IOException {
+    public Rfc2445Param readParam() throws IOException {
         String line = reader.readLine();
 
         if (line == null) {
@@ -39,7 +39,7 @@ public class Rfc2445CalendarReader implements AutoCloseable {
         int pos = line.indexOf(Rfc2445Param.DELIMITER);
         validate(line, pos);
         String name = line.substring(0, pos);
-        String value = line.substring(pos + 1);
+        String value = pos == line.length() - 1 ? "" : line.substring(pos + 1);
         return new Rfc2445Param(name, value);
     }
 
@@ -47,21 +47,14 @@ public class Rfc2445CalendarReader implements AutoCloseable {
         if (delimPos == -1) {
             throw new Rfc2445FormatException(
                     String.format(
-                            "Line %d is not a parameter line since it doesn't contain the delimiter: %s",
+                            "Line %d is not a valid parameter line since it doesn't contain the delimiter: %s",
                             linesRead, line
                     )
             );
         } else if (delimPos == 0) {
             throw new Rfc2445FormatException(
                     String.format(
-                            "Line %d is not a parameter line since it starts with the delimiter: %s",
-                            linesRead, line
-                    )
-            );
-        } else if (delimPos == line.length() - 1) {
-            throw new Rfc2445FormatException(
-                    String.format(
-                            "Line %d is not a parameter line since it ends with the delimiter: %s",
+                            "Line %d is not a valid parameter line since it starts with the delimiter: %s",
                             linesRead, line
                     )
             );
