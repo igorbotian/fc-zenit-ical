@@ -1,0 +1,1 @@
+web: sh web/target/bin/fc-zenit-ical
