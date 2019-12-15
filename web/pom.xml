@@ -54,8 +54,8 @@
                     <assembleDirectory>target</assembleDirectory>
                     <programs>
                         <program>
-                            <mainClass>launch.Main</mainClass>
-                            <name>webapp</name>
+                            <id>fc-zenit-ical</id>
+                            <mainClass>me.igorbotian.fczenit.ical.web.TomcatLauncher</mainClass>
                         </program>
                     </programs>
                 </configuration>
