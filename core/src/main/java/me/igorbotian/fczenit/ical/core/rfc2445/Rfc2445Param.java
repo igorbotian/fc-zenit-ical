@@ -12,7 +12,7 @@ public class Rfc2445Param {
     private final String name;
     private final String value;
 
-    Rfc2445Param(String name, String value) {
+    public Rfc2445Param(String name, String value) {
         this.name = Objects.requireNonNull(name);
         this.value = Objects.requireNonNull(value);
     }
