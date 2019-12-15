@@ -26,16 +26,14 @@ class Rfc2445CalendarWriterTest {
 
     @Test
     void nonEmptyCalendarIsSerializedToValidRfc2445String() throws IOException {
-        TestRfc2445Calendar cal = new TestRfc2445Calendar();
+        Rfc2445Calendar cal = TestRfc2445Calendar.newInstance();
 
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
             try (Rfc2445CalendarWriter writer = new Rfc2445CalendarWriter(new OutputStreamWriter(baos))) {
-                for (Rfc2445Param param : cal.asParams()) {
-                    writer.writeParam(param);
-                }
+                writer.writeCalendar(cal);
             }
 
-            String expected = cal.asString();
+            String expected = cal.toString();
             String actual = new String(baos.toByteArray(), StandardCharsets.UTF_8);
             assertEquals(expected, actual);
         }

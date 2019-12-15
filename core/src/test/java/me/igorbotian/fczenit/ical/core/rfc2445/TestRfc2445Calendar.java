@@ -1,43 +1,25 @@
 package me.igorbotian.fczenit.ical.core.rfc2445;
 
-import java.util.Collections;
-import java.util.LinkedHashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @author Igor Botian
  */
 class TestRfc2445Calendar {
 
-    private static final Map<String, String> PARAMS;
-
-    static {
-        Map<String, String> params = new LinkedHashMap<>();
-        params.put("BEGIN", "VCALENDAR");
-        params.put("VERSION", "2.0");
-        params.put("METHOD", "PUBLISH");
-        params.put("X-WR-TIMEZONE", "UTC");
-        params.put("CALSCALE", "GREGORIAN");
-        params.put("END", "VCALENDAR");
-        PARAMS = Collections.unmodifiableMap(params);
+    private TestRfc2445Calendar() {
+        throw new UnsupportedOperationException();
     }
 
-    Map<String, String> asMap() {
-        return PARAMS;
-    }
-
-    List<Rfc2445Param> asParams() {
-        return asMap().entrySet()
-                .stream()
-                .map(entry -> new Rfc2445Param(entry.getKey(), entry.getValue()))
-                .collect(Collectors.toList());
-    }
-
-    String asString() {
-        return asParams().stream()
-                .map(Rfc2445Param::toString)
-                .collect(Collectors.joining("\r\n"));
+    static Rfc2445Calendar newInstance() {
+        List<Rfc2445Param> params = new ArrayList<>();
+        params.add(new Rfc2445Param("BEGIN", "VCALENDAR"));
+        params.add(new Rfc2445Param("VERSION", "2.0"));
+        params.add(new Rfc2445Param("METHOD", "PUBLISH"));
+        params.add(new Rfc2445Param("X-WR-TIMEZONE", "UTC"));
+        params.add(new Rfc2445Param("CALSCALE", "GREGORIAN"));
+        params.add(new Rfc2445Param("END", "VCALENDAR"));
+        return new Rfc2445Calendar(params);
     }
 }

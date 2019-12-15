@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -23,27 +24,25 @@ class Rfc2445CalendarReaderWriterTest {
     @Test
     void rfc2445StringBeenReadAndWrittenKeepsTheSame() throws URISyntaxException, IOException {
         String calResource = "/zenit.ics";
+        Charset calEncoding = StandardCharsets.UTF_8;
         URL calUrl = getClass().getResource(calResource);
         String expected = String.join(
-                "\r\n",
+                Rfc2445Calendar.LINE_SEPARATOR,
                 Files.readAllLines(
-                        Paths.get(calUrl.toURI()), StandardCharsets.UTF_8
+                        Paths.get(calUrl.toURI()), calEncoding
                 )
         );
+        InputStream calStream = getClass().getResourceAsStream(calResource);
 
-        try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-            InputStream calStream = getClass().getResourceAsStream(calResource);
+        try (Rfc2445CalendarReader reader = new Rfc2445CalendarReader(new InputStreamReader(calStream, calEncoding))) {
+            Rfc2445Calendar cal = reader.readCalendar();
 
-            try (Rfc2445CalendarReader reader = new Rfc2445CalendarReader(new InputStreamReader(calStream))) {
+            try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
                 try (Rfc2445CalendarWriter writer = new Rfc2445CalendarWriter(new OutputStreamWriter(baos))) {
-                    Rfc2445Param param;
-
-                    while ((param = reader.readParam()) != null) {
-                        writer.writeParam(param);
-                    }
+                    writer.writeCalendar(cal);
                 }
 
-                String actual = new String(baos.toByteArray(), StandardCharsets.UTF_8);
+                String actual = new String(baos.toByteArray(), calEncoding);
                 assertEquals(expected, actual);
             }
         }

@@ -1,8 +1,7 @@
 package me.igorbotian.fczenit.ical.core.rfc2445;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -17,22 +16,18 @@ class Rfc2445CalendarReaderTest {
     @Test
     void readerReturnsNoParamsIfStringIsEmpty() throws IOException {
         try (Rfc2445CalendarReader reader = new Rfc2445CalendarReader(new StringReader(""))) {
-            assertNull(reader.readParam());
+            Rfc2445Calendar cal = reader.readCalendar();
+            assertTrue(cal.params().isEmpty());
         }
     }
 
     @Test
     void readerReturnsProperParametersIfStringStreamIsValid() throws IOException {
-        TestRfc2445Calendar cal = new TestRfc2445Calendar();
+        Rfc2445Calendar cal = TestRfc2445Calendar.newInstance();
 
-        try (Rfc2445CalendarReader reader = new Rfc2445CalendarReader(new StringReader(cal.asString()))) {
-            for (Rfc2445Param expected : cal.asParams()) {
-                Rfc2445Param actual = reader.readParam();
-                assertNotNull(actual);
-                assertEquals(expected, actual);
-            }
-
-            assertNull(reader.readParam());
+        try (Rfc2445CalendarReader reader = new Rfc2445CalendarReader(new StringReader(cal.toString()))) {
+            Rfc2445Calendar actual = reader.readCalendar();
+            assertEquals(cal, actual);
         }
     }
 }

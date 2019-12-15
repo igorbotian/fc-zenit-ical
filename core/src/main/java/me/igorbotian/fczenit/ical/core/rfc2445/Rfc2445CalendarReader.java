@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.Reader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import org.slf4j.Logger;
@@ -25,7 +27,18 @@ public class Rfc2445CalendarReader implements AutoCloseable {
         );
     }
 
-    public Rfc2445Param readParam() throws IOException {
+    public Rfc2445Calendar readCalendar() throws IOException {
+        List<Rfc2445Param> params = new ArrayList<>();
+        Rfc2445Param param;
+
+        while ((param = readParam()) != null) {
+            params.add(param);
+        }
+
+        return new Rfc2445Calendar(params);
+    }
+
+    private Rfc2445Param readParam() throws IOException {
         String line = reader.readLine();
 
         if (line == null) {
@@ -33,7 +46,7 @@ public class Rfc2445CalendarReader implements AutoCloseable {
             return null;
         }
 
-        return parseLine(line);
+        return parseLine(line.trim());
     }
 
     private Rfc2445Param parseLine(String line) {
