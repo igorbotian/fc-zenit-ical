@@ -2,6 +2,7 @@ package me.igorbotian.fczenit.ical.core.rfc2445;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.LineNumberReader;
 import java.io.Reader;
 import java.util.Objects;
 
@@ -15,12 +16,13 @@ public class Rfc2445CalendarReader implements AutoCloseable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Rfc2445CalendarReader.class);
 
-    private final BufferedReader reader;
-    private int linesRead;
+    private final LineNumberReader reader;
 
     public Rfc2445CalendarReader(Reader reader) {
         Objects.requireNonNull(reader);
-        this.reader = new BufferedReader(reader);
+        this.reader = new LineNumberReader(
+                new BufferedReader(reader)
+        );
     }
 
     public Rfc2445Param readParam() throws IOException {
@@ -31,7 +33,6 @@ public class Rfc2445CalendarReader implements AutoCloseable {
             return null;
         }
 
-        linesRead++;
         return parseLine(line);
     }
 
@@ -48,14 +49,14 @@ public class Rfc2445CalendarReader implements AutoCloseable {
             throw new Rfc2445FormatException(
                     String.format(
                             "Line %d is not a valid parameter line since it doesn't contain the delimiter: %s",
-                            linesRead, line
+                            reader.getLineNumber(), line
                     )
             );
         } else if (delimPos == 0) {
             throw new Rfc2445FormatException(
                     String.format(
                             "Line %d is not a valid parameter line since it starts with the delimiter: %s",
-                            linesRead, line
+                            reader.getLineNumber(), line
                     )
             );
         }
