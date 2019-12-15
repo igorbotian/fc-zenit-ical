@@ -9,7 +9,7 @@
     </parent>
 
     <artifactId>web</artifactId>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
     <name>web</name>
 
     <dependencies>
