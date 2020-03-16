@@ -9,6 +9,7 @@ public class FcZenitCalendarWebApp {
     public static void main(String[] args) {
         FcZenitCalendarRoute route = new FcZenitCalendarRoute();
         Spark.port(getPort());
+        Spark.staticFileLocation("/public");
         Spark.get("/zenit.ics", route);
         Spark.post("/zenit.ics", route);
     }
