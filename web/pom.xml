@@ -47,7 +47,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>me.igorbotian.fczenit.ical.web.FcZenitCalendarWebApp</mainClass>
+                            <mainClass>me.igorbotian.fczenit.ical.web.WebApp</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

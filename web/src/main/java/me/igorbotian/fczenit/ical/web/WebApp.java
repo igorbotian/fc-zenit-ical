@@ -4,14 +4,14 @@ import spark.Spark;
 
 import java.util.Optional;
 
-public class FcZenitCalendarWebApp {
+public class WebApp {
 
     public static void main(String[] args) {
-        FcZenitCalendarRoute route = new FcZenitCalendarRoute();
+        Controller cal = new Controller();
         Spark.port(getPort());
         Spark.staticFileLocation("/public");
-        Spark.get("/zenit.ics", route);
-        Spark.post("/zenit.ics", route);
+        Spark.get("/zenit.ics", cal::handleGet);
+        Spark.post("/zenit.ics", cal::handleGet);
     }
 
     private static int getPort() {

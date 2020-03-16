@@ -6,28 +6,32 @@ import me.igorbotian.fczenit.ical.core.rfc2445.Rfc2445Calendar;
 import me.igorbotian.fczenit.ical.core.rfc2445.Rfc2445Param;
 import spark.Request;
 import spark.Response;
-import spark.Route;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-class FcZenitCalendarRoute implements Route {
+class Controller {
 
     private final FcZenitCalendar zenitCalendar;
     private final FcZenitCalendarEventParamFixer calParamFixer;
 
-    FcZenitCalendarRoute() {
+    Controller() {
         zenitCalendar = FcZenitCalendar.newInstance();
         calParamFixer = new FcZenitCalendarEventParamFixer();
     }
 
-    @Override
-    public Object handle(Request request, Response response) throws Exception {
+    public String handleGet(Request request, Response response) throws IOException {
+        Objects.requireNonNull(request);
+        Objects.requireNonNull(response);
+
         Rfc2445Calendar cal = zenitCalendar.downloadFromWebSite();
-        Rfc2445Calendar fixed = fix(cal);
+        Rfc2445Calendar fixedCal = fix(cal);
         response.type("text/calendar; charset=utf-8; method=REQUEST");
         response.header("pragma", "no-cache");
-        return fixed.toString();
+
+        return fixedCal.toString();
     }
 
     private Rfc2445Calendar fix(Rfc2445Calendar cal) {
