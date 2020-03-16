@@ -1,1 +1,1 @@
-web: sh web/target/bin/fc-zenit-ical
+java -jar web/target/web-1.0-SNAPSHOT-jar-with-dependencies.jar
